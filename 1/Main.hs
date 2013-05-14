@@ -4,18 +4,15 @@ module Main where
 import LibA
 import LibB
 
-class Mappable m where
-  mmap :: (a -> b) -> m a -> m b
+instance Functor AList where
+  fmap = mapAList
 
-instance Mappable AList where
-  mmap = mapAList
+instance Functor BList where
+  fmap _ BNil = BNil
+  fmap f (BCons b r) = BCons (f b) (fmap f r)
 
-instance Mappable BList where
-  mmap _ BNil = BNil
-  mmap f (BCons b r) = BCons (f b) (mmap f r)
-
-plusOne :: Mappable m => m Int -> m Int
-plusOne = mmap (+1)
+plusOne :: Functor m => m Int -> m Int
+plusOne = fmap (+1)
 
 main :: IO ()
 main = do
